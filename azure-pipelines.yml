@@ -1,0 +1,20 @@
+trigger: none
+stages:
+  - stage: "build"
+    displayName: "vadi"
+    jobs:
+      - job: "publish"
+        displayName: "publish and package"
+        pool:
+          vmimage: "windows-2019"
+        steps:
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: 'VM-Build'
+            Contents: '**'
+            TargetFolder: '$(build.artifactstagingdirectory)'
+        - task: PublishBuildArtifacts@1
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: 'drop'
+            publishLocation: 'Container'
