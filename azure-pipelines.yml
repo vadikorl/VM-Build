@@ -18,3 +18,44 @@ stages:
             PathtoPublish: '$(Build.ArtifactStagingDirectory)'
             ArtifactName: 'drop'
             publishLocation: 'Container'
+  - stage: "delploy"
+    displayName: "devi"
+    jobs:
+      - deployment: 
+        pool:
+         vmimage: "windows-2019"
+        environment: "Dev"
+        strategy:
+         runOnce:
+            deploy:
+               steps:
+                 - task: TerraformInstaller@1
+                   inputs:
+                     terraformVersion: 'latest'
+                 - task: TerraformTaskV4@4
+                   inputs:
+                     provider: 'azurerm'
+                     command: 'init'
+                     workingDirectory: '$(Agent.BuildDirectory)/drop'
+                     backendServiceArm: 'Free Trial (cd527d2b-6a96-4d0d-92c3-e22a77be6316)'
+                     backendAzureRmResourceGroupName: 'RG-01'
+                     backendAzureRmStorageAccountName: 'storage32411'
+                     backendAzureRmContainerName: 'blobsto11'
+                     backendAzureRmKey: '''tf/terraform.tfstate'''
+                 - task: TerraformTaskV4@4
+                   inputs:
+                     provider: 'azurerm'
+                     command: 'validate'
+                     workingDirectory: '$(Agent.BuildDirectory)/drop'
+                 - task: TerraformTaskV4@4
+                   inputs:
+                     provider: 'azurerm'
+                     command: 'plan'
+                     workingDirectory: '$(Agent.BuildDirectory)/drop'
+                 - task: TerraformTaskV4@4
+                   inputs:
+                     provider: 'azurerm'
+                     command: 'apply'
+                     workingDirectory: '$(Agent.BuildDirectory)/drop'
+                     environmentServiceNameAzureRM: 'Free Trial (cd527d2b-6a96-4d0d-92c3-e22a77be6316)'
+
