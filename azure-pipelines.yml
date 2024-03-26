@@ -52,10 +52,4 @@ stages:
                      provider: 'azurerm'
                      command: 'plan'
                      workingDirectory: '$(Agent.BuildDirectory)/drop'
-                 - task: TerraformTaskV4@4
-                   inputs:
-                     provider: 'azurerm'
-                     command: 'apply'
-                     workingDirectory: '$(Agent.BuildDirectory)/drop'
-                     environmentServiceNameAzureRM: 'Free Trial (cd527d2b-6a96-4d0d-92c3-e22a77be6316)'
-
+                     
